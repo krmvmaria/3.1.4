@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.configs.PasswordConfig;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -20,16 +22,17 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Autowired
     private UserDao userDao;
+
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordConfig passwordConfig;
 
     @Transactional
     @Override
     public void add(User user) {
-        User userFromDB = userDao.findUserByName(user.getUsername());
+        //User userFromDB = userDao.findUserByName(user.getUsername());
 
         user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordConfig.passwordEncoder().encode(user.getPassword()));
 
         userDao.add(user);
     }
@@ -56,6 +59,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return userDao.findUserById(id);
     }
 
+    @Override
     public User findUserByName (String name) {
         return userDao.findUserByName(name);
     }
