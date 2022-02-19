@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.configs.PasswordConfig;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -15,6 +16,8 @@ public class UserDaoImp implements UserDao{
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    PasswordConfig passwordConfig;
 
     @Override
     public void add(User user) {
