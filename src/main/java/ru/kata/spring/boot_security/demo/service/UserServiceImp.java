@@ -46,6 +46,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public User change (User user, Set<Role> roles) {
+        user.setRoles(roles);
         return userDao.change(user, roles);
     }
 
