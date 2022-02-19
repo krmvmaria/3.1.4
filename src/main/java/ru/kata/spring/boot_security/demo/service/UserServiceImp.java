@@ -29,7 +29,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void add(User user) {
-        //User userFromDB = userDao.findUserByName(user.getUsername());
+        User userFromDB = userDao.findUserByName(user.getUsername());
 
         user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         user.setPassword(passwordConfig.passwordEncoder().encode(user.getPassword()));

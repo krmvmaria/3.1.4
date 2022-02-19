@@ -10,13 +10,13 @@
     </style>
 </head>
 <body>
-<h2>Users</h2>
 <table border = "3">
     <tr>
         <th>Id</th>
         <th>Name</th>
         <th>Last name</th>
         <th>Age</th>
+        <th>Password</th>
         <th>Role</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -26,7 +26,10 @@
         <td th:utext="${user.getName()}">Name</td>
         <td th:utext="${user.getLastName()}">Last name</td>
         <td th:utext="${user.getAge()}">Age</td>
-        <td th:utext="${user.getRoles()}">Role</td>
+        <td th:utext="${user.getPassword()}">Password</td>
+        <td>
+            <li th:each="role: ${user.getRoles()}" th:text="${role.getName()}"></li>
+        </td>
 
         <td> <form th:method="GET" th:action="@{/admin/{id}/edit(id=${user.getId()})}" th:object="${user}">
             <input type="submit" value="Edit user">
