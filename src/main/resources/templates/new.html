@@ -1,30 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New user</title>
+    <title>New User</title>
 </head>
 <body>
-
-<form th:method="POST" th:action="@{/admin}" th:object="${user}">
-    <label for="name">Enter name:</label>
-    <input type="text" th:field="*{name}" id="name">
+<form th:method="post" th:action="@{/admin/new}" th:object="${user}">
+    <!--    <input type="hidden" th:field="*{id}" id="id"/>-->
+    <label for="firstname">Enter First name: </label>
+    <br/>
+    <input type="text" th:field="*{name}" id="firstname"/>
+    <div th:if = "${#fields.hasErrors('name')}" th:errors = "*{name}">Name error</div>
+    <br/>
+    <label for="lastname">Enter Last name: </label>
+    <br/>
+    <input type="text" th:field="*{lastName}" id="lastname"/>
+    <div th:if = "${#fields.hasErrors('lastName')}" th:errors = "*{lastName}">Last name error</div>
+    <br/>
+    <label for="age">Enter age: </label>
+    <br/>
+    <input type="text" th:field="*{age}" id="age"/>
     <br/>
 
-    <label for="lastName">Enter last name:</label>
-    <input type="text" th:field="*{lastName}" id="lastName">
+    <label for="password">Enter password: </label>
     <br/>
-
-    <label for="age">Enter age:</label>
-    <input type="text" th:field="*{age}" id="age">
+    <input type="text" th:field="*{password}" id="password"/>
     <br/>
-
-    <label for="age">Enter password:</label>
-    <input type="text" th:field="*{password}" id="password">
-    <br/>
-
-    <input type="submit" value="Create!"/>
+    <input type="submit" value="OK"/>
 </form>
+
 
 </body>
 </html>

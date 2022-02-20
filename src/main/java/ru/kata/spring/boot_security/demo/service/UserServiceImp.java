@@ -12,8 +12,11 @@ import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,12 +27,17 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private UserDao userDao;
 
     @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
     private PasswordConfig passwordConfig;
+
+    @Autowired
+    EntityManager entityManager;
 
     @Transactional
     @Override
     public void add(User user) {
-        User userFromDB = userDao.findUserByName(user.getUsername());
 
         user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         user.setPassword(passwordConfig.passwordEncoder().encode(user.getPassword()));
