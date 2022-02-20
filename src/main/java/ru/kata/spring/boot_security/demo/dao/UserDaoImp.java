@@ -17,8 +17,6 @@ public class UserDaoImp implements UserDao{
     @PersistenceContext
     private EntityManager entityManager;
 
-    PasswordConfig passwordConfig;
-
     @Override
     public void add(User user) {
         entityManager.persist(user);

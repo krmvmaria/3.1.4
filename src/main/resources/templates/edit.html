@@ -7,21 +7,25 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/admin/edit/}" th:object="${user}">
-  <!--    <input type="hidden" th:field="*{id}" id="id"/>-->
-  <label for="firstname">Enter First name: </label>
+<form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
+
+  <label for="name">Enter name:</label>
+  <input type="text" th:field="*{name}" id="name">
   <br/>
-  <input type="text" th:field="*{name}" id="firstname"/>
+
+  <label for="lastName">Enter last name:</label>
+  <input type="text" th:field="*{lastName}" id="lastName">
   <br/>
-  <label for="lastname">Enter Last name: </label>
+
+  <label for="age">Enter age:</label>
+  <input type="text" th:field="*{age}" id="age">
   <br/>
-  <input type="text" th:field="*{lastName}" id="lastname"/>
+
+  <label for="password">Enter password:</label>
+  <input type="text" th:field="*{password}" id="password">
   <br/>
-  <label for="age">Enter age: </label>
-  <br/>
-  <input type="text" th:field="*{age}" id="age"/>
-  <br/>
-  <br/>
+
+
   <tr>
     <td>
       <label>Roles:

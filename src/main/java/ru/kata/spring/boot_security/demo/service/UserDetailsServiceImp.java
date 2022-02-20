@@ -10,8 +10,12 @@ import ru.kata.spring.boot_security.demo.dao.UserDao;
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
 
-    @Autowired
     UserDao userDao;
+
+    @Autowired
+    public UserDetailsServiceImp(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
