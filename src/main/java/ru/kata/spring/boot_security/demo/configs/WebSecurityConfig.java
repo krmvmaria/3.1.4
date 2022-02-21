@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
 
@@ -13,17 +14,17 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserServiceImp userServiceImp;
+    private final UserServiceImp userServiceImp;
 
     private final SuccessUserHandler successUserHandler;
 
-    @Autowired
-    PasswordConfig passwordConfig;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceImp userServiceImp, PasswordEncoder passwordEncoder) {
         this.successUserHandler = successUserHandler;
+        this.userServiceImp = userServiceImp;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userServiceImp).passwordEncoder(passwordConfig.passwordEncoder());
+        auth.userDetailsService(userServiceImp).passwordEncoder(passwordEncoder);
     }
 
 }

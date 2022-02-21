@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.configs.PasswordConfig;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -18,20 +18,19 @@ import java.util.Set;
 public class UserServiceImp implements UserService, UserDetailsService {
 
     private final UserDao userDao;
-
-    private final PasswordConfig passwordConfig;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImp(UserDao userDao, PasswordConfig passwordConfig) {
+    public UserServiceImp(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
-        this.passwordConfig = passwordConfig;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     @Override
     public void add(User user, Set<Role> roles) {
-        user.setPassword(passwordConfig.passwordEncoder().encode(user.getPassword()));
-        userDao.add(user, roles);
+        user.setRoles(roles);
+        userDao.add(user);
     }
 
     @Transactional
@@ -42,9 +41,9 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public User change (User user, Set<Role> roles) {
+    public void change (User user, Set<Role> roles) {
         user.setRoles(roles);
-        return userDao.change(user, roles);
+        userDao.change(user, roles);
     }
 
     @Override
