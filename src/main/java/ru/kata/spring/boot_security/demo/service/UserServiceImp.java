@@ -6,40 +6,32 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.configs.PasswordConfig;
-import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class UserServiceImp implements UserService, UserDetailsService {
 
-    @Autowired
-    private UserDao userDao;
+    private final UserDao userDao;
+
+    private final PasswordConfig passwordConfig;
 
     @Autowired
-    private RoleDao roleDao;
-
-    @Autowired
-    private PasswordConfig passwordConfig;
-
-    @Autowired
-    EntityManager entityManager;
+    public UserServiceImp(UserDao userDao, PasswordConfig passwordConfig) {
+        this.userDao = userDao;
+        this.passwordConfig = passwordConfig;
+    }
 
     @Transactional
     @Override
-    public void add(User user) {
-        user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
+    public void add(User user, Set<Role> roles) {
         user.setPassword(passwordConfig.passwordEncoder().encode(user.getPassword()));
-        userDao.add(user);
+        userDao.add(user, roles);
     }
 
     @Transactional

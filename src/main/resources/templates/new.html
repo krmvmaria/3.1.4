@@ -24,6 +24,18 @@
     <br/>
     <input type="text" th:field="*{password}" id="password"/>
     <br/>
+
+    <tr>
+        <td>
+            <label>Roles:
+                <select size="2" multiple name="listRoles" required="required">
+                    <option selected="selected" value="1">ADMIN</option>
+                    <option value="2">USER</option>
+                </select>
+            </label>
+        </td>
+    </tr>
+
     <input type="submit" value="OK"/>
 </form>
 

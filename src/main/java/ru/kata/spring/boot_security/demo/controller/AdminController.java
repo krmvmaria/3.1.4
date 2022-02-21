@@ -50,13 +50,15 @@ public class AdminController {
     }
 
     @GetMapping("/new")
-    public String newUser (@ModelAttribute("user") User user){
+    public String newUser (Model model){
+        model.addAttribute("user", new User());
+        model.addAttribute("listRoles", roleService.getAllRoles());
         return "/new";
     }
 
     @PostMapping("/new")
-    public String addUser (@ModelAttribute("user") User userForm, Model model){
-        userService.add(userForm);
+    public String addUser (User user, @RequestParam("listRoles") ArrayList<Long> roles){
+        userService.add(user, roleService.findRoles(roles));
         return "redirect:/admin";
     }
 }
