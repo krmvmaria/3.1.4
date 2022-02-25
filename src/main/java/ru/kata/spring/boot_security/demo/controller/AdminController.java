@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
 import java.util.ArrayList;
 
 @Controller
@@ -44,7 +45,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PutMapping("/edit")
+    @PostMapping("/edit")
     public String update(@ModelAttribute("user") User user, @RequestParam("listRoles") ArrayList<Long> roles){
         if (user.getPassword().equals(userService.findUserById(user.getId()).getPassword())){
             userService.change(user, roleService.findRoles(roles));
