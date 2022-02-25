@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,25 +30,22 @@ public class AdminController {
 
     @GetMapping()
     public String userList(Model model) {
+        User user = (User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
         model.addAttribute("allUsers", userService.listUsers());
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roleService.getAllRoles());
         return "admin";
     }
 
     @DeleteMapping("/delete/{id}")
-    public String  deleteUser(@PathVariable("id") long id) {
+    public String deleteUser(@PathVariable("id") long id) {
         userService.delete(id);
         return "redirect:/admin";
     }
 
-    @GetMapping("/edit/{id}")
-    public String edit(Model model, @PathVariable("id") long id){
-        model.addAttribute("user", userService.findUserById(id));
-        model.addAttribute("listRoles", roleService.getAllRoles());
-        return "edit";
-    }
-
-    @PatchMapping("/{id}")
-    public String update(User user, @RequestParam("listRoles") ArrayList<Long> roles){
+    @PutMapping("/edit")
+    public String update(@ModelAttribute("user") User user, @RequestParam("listRoles") ArrayList<Long> roles){
         if (user.getPassword().equals(userService.findUserById(user.getId()).getPassword())){
             userService.change(user, roleService.findRoles(roles));
         } else {
@@ -54,13 +53,6 @@ public class AdminController {
             userService.change(user, roleService.findRoles(roles));
         }
         return "redirect:/admin";
-    }
-
-    @GetMapping("/new")
-    public String newUser (Model model){
-        model.addAttribute("user", new User());
-        model.addAttribute("listRoles", roleService.getAllRoles());
-        return "/new";
     }
 
     @PostMapping("/new")
