@@ -36,7 +36,7 @@ public class AdminController {
         model.addAttribute("allUsers", userService.listUsers());
         model.addAttribute("userMain", user);
         model.addAttribute("roles", roleService.getAllRoles());
-        return "admin";
+        return "adminEx";
     }
 
     @DeleteMapping("/delete/{id}")
