@@ -34,7 +34,7 @@ public class AdminController {
         User user = (User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         model.addAttribute("allUsers", userService.listUsers());
-        model.addAttribute("user", user);
+        model.addAttribute("userMain", user);
         model.addAttribute("roles", roleService.getAllRoles());
         return "admin";
     }
