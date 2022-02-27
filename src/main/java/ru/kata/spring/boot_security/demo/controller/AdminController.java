@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -10,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
-import java.security.Principal;
 import java.util.ArrayList;
 
 @Controller
@@ -36,7 +33,7 @@ public class AdminController {
         model.addAttribute("allUsers", userService.listUsers());
         model.addAttribute("userMain", user);
         model.addAttribute("roles", roleService.getAllRoles());
-        return "adminEx";
+        return "admin";
     }
 
     @DeleteMapping("/delete/{id}")
