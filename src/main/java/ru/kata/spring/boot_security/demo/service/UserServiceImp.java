@@ -42,8 +42,14 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void change (User user, Set<Role> roles) {
-        user.setRoles(roles);
-        userDao.change(user, roles);
+        if (user.getPassword().equals(findUserById(user.getId()).getPassword())){
+            user.setRoles(roles);
+            userDao.change(user, roles);
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(roles);
+            userDao.change(user, roles);
+        }
     }
 
     @Override
