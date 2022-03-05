@@ -25,9 +25,9 @@ public class User implements UserDetails {
     private String password;
 
     @Transient
+    @JsonIgnore
     private String passwordConfirm;
 
-    @JsonIgnore
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -46,11 +46,11 @@ public class User implements UserDetails {
     public User() {
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.getRoles();
+        return this.roles;
     }
-
 
     public String getPassword() {
         return password;
