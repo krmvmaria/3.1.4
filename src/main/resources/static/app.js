@@ -6,16 +6,15 @@ const renderUsers = (users) => {
                     <td>${user.name}</td>
                     <td>${user.lastName}</td>
                     <td>${user.age}</td>
-                    <td>${user.roles.map(e => " " + e.name)}</td>
+                    <td>${user.roles}</td>
                     <td>${user.password}</td>
-                    
-                   
+                       
               <td>
-                   <button type="button" data-userid="${user.id}" data-action="edit" class="btn1 btn-info"
+                   <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info"
                     data-toggle="modal" data-target="modal" id="edit-user" data-id="${user.id}">Edit</button>
                </td>
                <td>
-                   <button type="button" class="btnDelete btn-danger" id="delete-user" data-action="delete" 
+                   <button type="button" class="btn btn-danger" id="delete-user" data-action="delete" 
                    data-id="${user.id}" data-target="modal">Delete</button>
                     </td>    
               </tr>
@@ -36,12 +35,6 @@ const renderUsers = (users) => {
     //открытие модальных окон
     info.addEventListener('click', (e) => {
         e.preventDefault()
-
- //       if (e.target.id == 'delete-user') {
- //           $("#modalDelete").modal("show");
- //       } else if (e.target.id == 'edit-user') {
- //           $("#modalEdit").modal("show");
- //       }
     })
 
 // добавляем юзера (!) ПЕРЕДАТЬ РОЛЬ В JSON
@@ -86,26 +79,48 @@ const on = (element, event, selector, handler) => {
         })
 }
 
-// РЕДАКТИРОВАНИЕ
-on(document, 'click', '.btn1', e => {
+// РЕДАКТИРОВАНИЕ (!) ТОЛЬКО ПОСЛЕ ОБНОВЛЕНИЯ СТРАНИЦЫ РЕЗУЛЬТАТ
+on(document, 'click', '#edit-user', e => {
     const fila = e.target.parentNode.parentNode
 
     document.getElementById('id0').value = fila.children[0].innerHTML
     document.getElementById('name0').value = fila.children[1].innerHTML
     document.getElementById('lastName0').value = fila.children[2].innerHTML
     document.getElementById('age0').value = fila.children[3].innerHTML
-    document.getElementById('password0').value
     document.getElementById('roles0').value = fila.children[4].innerHTML
-
+    document.getElementById('password0').value = fila.children[5].innerHTML
+    option = 'editar'
     $("#modalEdit").modal("show")
-    const editUserForm = document.querySelector('#modalEdit')
-    editUserForm.addEventListener('submit', (e) =>{
-    })
+})
+
+const editUserForm = document.querySelector('#modalEdit')
+editUserForm.addEventListener('submit', (e) =>{
+    if(option=='editar'){
+      fetch(url, {
+          method: 'PUT',
+          headers: {
+              'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify({
+              id: document.getElementById('id0').value,
+              name: document.getElementById('name0').value,
+              lastName: document.getElementById('lastName0').value,
+              age: document.getElementById('age0').value,
+              password: document.getElementById('password0').value,
+              roles: [
+                  document.getElementById('roles0').value
+              ]
+          })
+      })
+          .then(response => response.json())
+          .then( response => location.reload())
+    }
+    $("#modalEdit").modal("hide")
 })
 // редактирование конец
 
 // удаление пользователя (!) УБРАТЬ ПЕРЕЗАГРУЗКУ
-on(document, 'click', '.btnDelete', e => {
+on(document, 'click', '#delete-user', e => {
     const deleteUserForm = document.querySelector('#modalDelete')
     const fila2 = e.target.parentNode.parentNode
     const id = fila2.firstElementChild.innerHTML
@@ -124,10 +139,17 @@ on(document, 'click', '.btnDelete', e => {
             method: 'DELETE'
         })
             .then(res => res.json())
-            .then(() => location.reload())
+   //         .then(() => location.reload())
+            .then( data => {
+                const newUser = []
+                newUser.push(data)
+                renderUsers(newUser)
+            })
     })
 })
 // удаление пользователя конец
+
+
 
 
 
