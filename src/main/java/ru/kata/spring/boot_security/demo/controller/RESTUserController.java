@@ -8,8 +8,6 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -23,14 +21,8 @@ public class RESTUserController {
     }
 
     @GetMapping()
-    public List<?> getUserByUsername (Principal principal) {
+    public User getUserByUsername (Principal principal) {
         User user = userService.findUserByName(principal.getName());
-        List userInfo = new ArrayList<>();
-        userInfo.add(user.getId());
-        userInfo.add(user.getName());
-        userInfo.add(user.getLastName());
-        userInfo.add(user.getAge());
-        userInfo.add(user.getRoles());
-        return userInfo;
+        return user;
     }
 }

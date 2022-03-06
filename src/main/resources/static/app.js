@@ -149,6 +149,18 @@ on(document, 'click', '#delete-user', e => {
 })
 // удаление пользователя конец
 
+//nav bar
+const url3 = 'http://localhost:8080/api/user'
+let loggedUserHeaderElem = document.querySelector('#navBarAdmin')
+
+fetch(url3)
+    .then(res => res.json())
+    .then(data => {
+        loggedUserHeaderElem.innerHTML = `<span class="align-middle font-weight-bold mr-1">${data.name}  </span></b>
+                <span class="align-middle mr-1">with roles:  </span>
+                <span>  ${data.roles.map(a => a.name + " ")}</span>`;
+    })
+
 
 
 

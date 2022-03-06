@@ -17,10 +17,10 @@
 
     <div class="container-fluid">
         <div class="collapse navbar-collapse show" id="navbarDark">
-            <ul class="navbar-nav me-auto mb-2 mb-xl-0">
-                <span class="align-middle font-weight-bold mr-1" th:text="${user.getName()}"></span></b>
-                <span class="align-middle mr-1">with roles:</span>
-                <span class="align-middle" th:each="role:${user.getRoles()}" th:text="${role.getName}">
+            <ul class="navbar-nav me-auto mb-2 mb-xl-0" id="nabBarUser">
+                <span class="align-middle font-weight-bold mr-1"></span></b>
+                <span class="align-middle mr-1"></span>
+                <span class="align-middle">
                     </span>
             </ul>
         </div>
