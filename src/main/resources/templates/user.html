@@ -63,15 +63,9 @@
                                         <th>Age</th>
                                         <th>Roles</th>
                                     </tr>
+                                    <tbody id="User">
 
-                                    <td th:text="${user.getId()}"></td>
-                                    <td th:text="${user.getName()}"></td>
-                                    <td th:text="${user.getLastName()}"></td>
-                                    <td th:text="${user.getAge()}"></td>
-
-                                    <td>
-                                        <li th:each="role: ${user.getRoles()}" th:text="${role.getName()}"></li>
-                                    </td>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -82,7 +76,7 @@
     </div>
 </div>
 
-
+<script type="text/javascript" src="user.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
