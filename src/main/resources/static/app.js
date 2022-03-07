@@ -1,34 +1,40 @@
 const renderUsers = (users) => {
-    users.forEach(user => {
-        output += `
-              <tr>
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.lastName}</td>
-                    <td>${user.age}</td>
-                    <td>${user.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</td>
-                    <td>${user.password}</td>
-              <td>
-                   <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info"
-                    data-toggle="modal" data-target="modal" id="edit-user" data-id="${user.id}">Edit</button>
-               </td>
-               <td>
-                   <button type="button" class="btn btn-danger" id="delete-user" data-action="delete" 
-                   data-id="${user.id}" data-target="modal">Delete</button>
-                    </td>    
+    output = '',
+        users.forEach(user => {
+            output += ` 
+              <tr> 
+                    <td>${user.id}</td> 
+                    <td>${user.name}</td> 
+                    <td>${user.lastName}</td> 
+                    <td>${user.age}</td> 
+                    <td>${user.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</td> 
+                    <td>${user.password}</td> 
+              <td> 
+                   <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info" 
+                    data-toggle="modal" data-target="modal" id="edit-user" data-id="${user.id}">Edit</button> 
+               </td> 
+               <td> 
+                   <button type="button" class="btn btn-danger" id="delete-user" data-action="delete"  
+                   data-id="${user.id}" data-target="modal">Delete</button> 
+                    </td>     
               </tr>`
-    })
+        })
     info.innerHTML = output;
 }
-
+let users = [];
+const updateUser = (user) => {
+    const foundIndex = users.findIndex(x => x.id == user.id);
+    users[foundIndex] = user;
+    renderUsers(users);
+}
 // достаем всех юзеров в таблицу
 const info = document.querySelector('#allUsers');
-let output = '';
 const url = 'http://localhost:8080/api/admin'
 
 fetch(url, {mode: 'cors'})
     .then(res => res.json())
-    .then(data => renderUsers(data))
+    .then(data => {users = data; renderUsers(data)
+    })
 
 
 // добавляем юзера
@@ -40,7 +46,8 @@ const age3 = document.getElementById('age3')
 const password3 = document.getElementById('password3')
 const roles3 = document.getElementById('roles3')
 
-addUserForm.addEventListener('submit', (e) =>{
+addUserForm.addEventListener('submit', (e) => {
+    e.preventDefault();
     fetch(url, {
         method: 'POST',
         headers: {
@@ -58,12 +65,9 @@ addUserForm.addEventListener('submit', (e) =>{
     })
         .then(res => res.json())
         .then(data => {
-            const dataArr = [];
-            dataArr.push(data);
-            renderUsers(dataArr);
+            renderUsers(data);
         })
 })
-
 
 const on = (element, event, selector, handler) => {
     element.addEventListener(event, e => {
@@ -76,7 +80,6 @@ const on = (element, event, selector, handler) => {
 // редактирование пользователя
 on(document, 'click', '#edit-user', e => {
     const fila = e.target.parentNode.parentNode
-
     document.getElementById('id0').value = fila.children[0].innerHTML
     document.getElementById('name0').value = fila.children[1].innerHTML
     document.getElementById('lastName0').value = fila.children[2].innerHTML
@@ -88,8 +91,9 @@ on(document, 'click', '#edit-user', e => {
 })
 
 const editUserForm = document.querySelector('#modalEdit')
-editUserForm.addEventListener('submit', (e) =>{
-    if(option=='editar'){
+editUserForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if(option == 'editar'){
         fetch(url, {
             method: 'PUT',
             headers: {
@@ -106,12 +110,12 @@ editUserForm.addEventListener('submit', (e) =>{
                 ]
             })
         })
-            .then(response => response.json())
-            .then( response => location.reload())
+            .then(res=> res.json()).
+        then(data => updateUser(data))
+            .catch((e) => console.error(e))
     }
     $("#modalEdit").modal("hide")
 })
-
 
 // удаление пользователя
 on(document, 'click', '#delete-user', e => {
@@ -128,19 +132,15 @@ on(document, 'click', '#delete-user', e => {
     $("#modalDelete").modal("show")
 
     deleteUserForm.addEventListener('submit', (e) =>{
-
+        e.preventDefault();
         fetch('http://localhost:8080/api/admin/'+id, {
             method: 'DELETE'
         })
             .then(res => res.json())
-            //         .then(() => location.reload())
-            .then( data => {
-                const newUser = []
-                newUser.push(data)
-                renderUsers(newUser)
-            })
+            .then( data => { renderUsers(data); $("#modalDelete").modal("hide")})
     })
 })
+
 
 
 //навигационная панель
@@ -150,9 +150,7 @@ let loggedUserHeaderElem = document.querySelector('#navBarAdmin')
 fetch(url3)
     .then(res => res.json())
     .then(data => {
-        loggedUserHeaderElem.innerHTML = `<span class="align-middle font-weight-bold mr-1">${data.name}  </span></b>
-                <span class="align-middle mr-1">with roles:  </span>
+        loggedUserHeaderElem.innerHTML = `<span class="align-middle font-weight-bold mr-1">${data.name}  </span></b> 
+                <span class="align-middle mr-1"> with roles:  </span> 
                 <span>  ${data.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</span>`;
     })
-
-
