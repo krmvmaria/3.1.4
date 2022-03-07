@@ -14,9 +14,9 @@ const renderUsers = (users) => {
                     data-toggle="modal" data-target="modal" id="edit-user" data-id="${user.id}">Edit</button> 
                </td> 
                <td> 
-                   <button type="button" class="btn btn-danger" id="delete-user" data-action="delete"  
+                   <button type="button" class="btn btn-danger" id="delete-user" data-action="delete" 
                    data-id="${user.id}" data-target="modal">Delete</button> 
-                    </td>     
+                    </td> 
               </tr>`
         })
     info.innerHTML = output;
@@ -26,25 +26,33 @@ const updateUser = (user) => {
     const foundIndex = users.findIndex(x => x.id == user.id);
     users[foundIndex] = user;
     renderUsers(users);
+    console.log('users');
 }
-// достаем всех юзеров в таблицу
+const removeUser = (id) => {
+    users = users.filter(user => user.id != id);
+    console.log(users)
+    renderUsers(users);
+}
+
+// GET ALL users
 const info = document.querySelector('#allUsers');
 const url = 'http://localhost:8080/api/admin'
 
 fetch(url, {mode: 'cors'})
     .then(res => res.json())
-    .then(data => {users = data; renderUsers(data)
+    .then(data => {
+        users = data;
+        renderUsers(data)
     })
 
-
-// добавляем юзера
+// ADD user
 const addUserForm = document.querySelector('#addUser')
 
-const name3 = document.getElementById('name3')
-const lastname3 = document.getElementById('lastname3')
-const age3 = document.getElementById('age3')
-const password3 = document.getElementById('password3')
-const roles3 = document.getElementById('roles3')
+const addName = document.getElementById('name3')
+const addLastName = document.getElementById('lastname3')
+const addAge = document.getElementById('age3')
+const addPassword = document.getElementById('password3')
+const addRoles = document.getElementById('roles3')
 
 addUserForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -54,50 +62,50 @@ addUserForm.addEventListener('submit', (e) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            name: name3.value,
-            lastName: lastname3.value,
-            age: age3.value,
-            password: password3.value,
+            name: addName.value,
+            lastName: addLastName.value,
+            age: addAge.value,
+            password: addPassword.value,
             roles: [
-                roles3.value
+                addRoles.value
             ]
         })
     })
         .then(res => res.json())
         .then(data => {
-            renderUsers(data);
+            users = data;
+            renderUsers(users);
         })
 })
 
 const on = (element, event, selector, handler) => {
     element.addEventListener(event, e => {
-        if(e.target.closest(selector)){
+        if (e.target.closest(selector)) {
             handler(e)
         }
     })
 }
 
-// редактирование пользователя
+// EDIT user
 on(document, 'click', '#edit-user', e => {
-    const fila = e.target.parentNode.parentNode
-    document.getElementById('id0').value = fila.children[0].innerHTML
-    document.getElementById('name0').value = fila.children[1].innerHTML
-    document.getElementById('lastName0').value = fila.children[2].innerHTML
-    document.getElementById('age0').value = fila.children[3].innerHTML
-    document.getElementById('roles0').value = fila.children[4].innerHTML
-    document.getElementById('password0').value = fila.children[5].innerHTML
-    option = 'editar'
+    const userInfo = e.target.parentNode.parentNode
+    document.getElementById('id0').value = userInfo.children[0].innerHTML
+    document.getElementById('name0').value = userInfo.children[1].innerHTML
+    document.getElementById('lastName0').value = userInfo.children[2].innerHTML
+    document.getElementById('age0').value = userInfo.children[3].innerHTML
+    document.getElementById('roles0').value = userInfo.children[4].innerHTML
+    document.getElementById('password0').value = userInfo.children[5].innerHTML
+
     $("#modalEdit").modal("show")
 })
 
 const editUserForm = document.querySelector('#modalEdit')
 editUserForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    if(option == 'editar'){
         fetch(url, {
             method: 'PUT',
             headers: {
-                'Content-Type' : 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 id: document.getElementById('id0').value,
@@ -110,18 +118,33 @@ editUserForm.addEventListener('submit', (e) => {
                 ]
             })
         })
-            .then(res=> res.json()).
-        then(data => updateUser(data))
+            .then(res => res.json()).then(data => updateUser(data))
             .catch((e) => console.error(e))
-    }
+
     $("#modalEdit").modal("hide")
 })
 
-// удаление пользователя
+// DELETE user
+let currentUserId = null;
+const deleteUserForm = document.querySelector('#modalDelete')
+deleteUserForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    fetch('http://localhost:8080/api/admin/' + currentUserId, {
+        method: 'DELETE'
+    })
+        .then(res => res.json())
+        .then(data => {
+            removeUser(currentUserId);
+            deleteUserForm.removeEventListener('submit', () => {
+            });
+            $("#modalDelete").modal("hide")
+        })
+})
+
 on(document, 'click', '#delete-user', e => {
-    const deleteUserForm = document.querySelector('#modalDelete')
     const fila2 = e.target.parentNode.parentNode
-    const id = fila2.firstElementChild.innerHTML
+    currentUserId = fila2.children[0].innerHTML
 
     document.getElementById('id2').value = fila2.children[0].innerHTML
     document.getElementById('name2').value = fila2.children[1].innerHTML
@@ -130,20 +153,9 @@ on(document, 'click', '#delete-user', e => {
     document.getElementById('roles2').value = fila2.children[4].innerHTML
 
     $("#modalDelete").modal("show")
-
-    deleteUserForm.addEventListener('submit', (e) =>{
-        e.preventDefault();
-        fetch('http://localhost:8080/api/admin/'+id, {
-            method: 'DELETE'
-        })
-            .then(res => res.json())
-            .then( data => { renderUsers(data); $("#modalDelete").modal("hide")})
-    })
 })
 
-
-
-//навигационная панель
+//Navigation bar
 const url3 = 'http://localhost:8080/api/user'
 let loggedUserHeaderElem = document.querySelector('#navBarAdmin')
 

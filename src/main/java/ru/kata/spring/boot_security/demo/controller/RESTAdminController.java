@@ -41,8 +41,9 @@ public class RESTAdminController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable long id) {
+    public List<User> deleteUser(@PathVariable long id) {
         userService.delete(id);
+        return userService.listUsers();
     }
 
 }
