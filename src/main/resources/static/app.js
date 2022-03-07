@@ -22,20 +22,16 @@ const renderUsers = (users) => {
 }
 
 // достаем всех юзеров в таблицу
-    const info = document.querySelector('#allUsers');
-    let output = '';
-    const url = 'http://localhost:8080/api/admin'
+const info = document.querySelector('#allUsers');
+let output = '';
+const url = 'http://localhost:8080/api/admin'
 
-    fetch(url, {mode: 'cors'})
-        .then(res => res.json())
-        .then(data => renderUsers(data))
+fetch(url, {mode: 'cors'})
+    .then(res => res.json())
+    .then(data => renderUsers(data))
 
-    //открытие модальных окон
-    info.addEventListener('click', (e) => {
-        e.preventDefault()
-    })
 
-// добавляем юзера (!) ПЕРЕДАТЬ РОЛЬ В JSON
+// добавляем юзера
 const addUserForm = document.querySelector('#addUser')
 
 const name3 = document.getElementById('name3')
@@ -68,16 +64,16 @@ addUserForm.addEventListener('submit', (e) =>{
         })
 })
 
-//click all
+
 const on = (element, event, selector, handler) => {
-        element.addEventListener(event, e => {
-            if(e.target.closest(selector)){
-                handler(e)
-            }
-        })
+    element.addEventListener(event, e => {
+        if(e.target.closest(selector)){
+            handler(e)
+        }
+    })
 }
 
-// РЕДАКТИРОВАНИЕ (!) ТОЛЬКО ПОСЛЕ ОБНОВЛЕНИЯ СТРАНИЦЫ РЕЗУЛЬТАТ
+// редактирование пользователя
 on(document, 'click', '#edit-user', e => {
     const fila = e.target.parentNode.parentNode
 
@@ -94,30 +90,30 @@ on(document, 'click', '#edit-user', e => {
 const editUserForm = document.querySelector('#modalEdit')
 editUserForm.addEventListener('submit', (e) =>{
     if(option=='editar'){
-      fetch(url, {
-          method: 'PUT',
-          headers: {
-              'Content-Type' : 'application/json'
-          },
-          body: JSON.stringify({
-              id: document.getElementById('id0').value,
-              name: document.getElementById('name0').value,
-              lastName: document.getElementById('lastName0').value,
-              age: document.getElementById('age0').value,
-              password: document.getElementById('password0').value,
-              roles: [
-                  document.getElementById('roles0').value
-              ]
-          })
-      })
-          .then(response => response.json())
-          .then( response => location.reload())
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                id: document.getElementById('id0').value,
+                name: document.getElementById('name0').value,
+                lastName: document.getElementById('lastName0').value,
+                age: document.getElementById('age0').value,
+                password: document.getElementById('password0').value,
+                roles: [
+                    document.getElementById('roles0').value
+                ]
+            })
+        })
+            .then(response => response.json())
+            .then( response => location.reload())
     }
     $("#modalEdit").modal("hide")
 })
-// редактирование конец
 
-// удаление пользователя (!) УБРАТЬ ПЕРЕЗАГРУЗКУ
+
+// удаление пользователя
 on(document, 'click', '#delete-user', e => {
     const deleteUserForm = document.querySelector('#modalDelete')
     const fila2 = e.target.parentNode.parentNode
@@ -137,7 +133,7 @@ on(document, 'click', '#delete-user', e => {
             method: 'DELETE'
         })
             .then(res => res.json())
-   //         .then(() => location.reload())
+            //         .then(() => location.reload())
             .then( data => {
                 const newUser = []
                 newUser.push(data)
@@ -145,9 +141,9 @@ on(document, 'click', '#delete-user', e => {
             })
     })
 })
-// удаление пользователя конец
 
-//nav bar
+
+//навигационная панель
 const url3 = 'http://localhost:8080/api/user'
 let loggedUserHeaderElem = document.querySelector('#navBarAdmin')
 
@@ -158,10 +154,5 @@ fetch(url3)
                 <span class="align-middle mr-1">with roles:  </span>
                 <span>  ${data.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</span>`;
     })
-
-
-
-
-
 
 
