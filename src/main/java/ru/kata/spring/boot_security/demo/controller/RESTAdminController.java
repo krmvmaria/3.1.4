@@ -35,9 +35,9 @@ public class RESTAdminController {
     }
 
     @PutMapping()
-    public List<User> update(@RequestBody User user){
+    public User update(@RequestBody User user){
         userService.change(user, user.getRoles());
-        return userService.listUsers();
+        return user;
     }
 
     @DeleteMapping("/{id}")

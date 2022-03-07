@@ -7,13 +7,13 @@ fetch(url)
     .then(data => {
         loggedUserHeaderElem.innerHTML = `<span class="align-middle font-weight-bold mr-1">${data.name}  </span></b>
                 <span class="align-middle mr-1">with roles:  </span>
-                <span>  ${data.roles.map(a => a.name + " ")}</span>`;
+                <span>  ${data.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</span>`;
         loggedInUser.innerHTML = `
                                 <td>${data.id}</td>
                                 <td>${data.name}</td>
                                 <td>${data.lastName}</td>
                                 <td>${data.age}</td>
-                                <td>${data.roles.map(e => e.name)}</td>
+                                <td>${data.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</td>
                                 `;
 })
 

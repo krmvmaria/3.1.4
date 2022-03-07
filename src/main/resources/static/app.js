@@ -6,9 +6,8 @@ const renderUsers = (users) => {
                     <td>${user.name}</td>
                     <td>${user.lastName}</td>
                     <td>${user.age}</td>
-                    <td>${user.roles}</td>
+                    <td>${user.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</td>
                     <td>${user.password}</td>
-                       
               <td>
                    <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info"
                     data-toggle="modal" data-target="modal" id="edit-user" data-id="${user.id}">Edit</button>
@@ -17,8 +16,7 @@ const renderUsers = (users) => {
                    <button type="button" class="btn btn-danger" id="delete-user" data-action="delete" 
                    data-id="${user.id}" data-target="modal">Delete</button>
                     </td>    
-              </tr>
-            `
+              </tr>`
     })
     info.innerHTML = output;
 }
@@ -158,7 +156,7 @@ fetch(url3)
     .then(data => {
         loggedUserHeaderElem.innerHTML = `<span class="align-middle font-weight-bold mr-1">${data.name}  </span></b>
                 <span class="align-middle mr-1">with roles:  </span>
-                <span>  ${data.roles.map(a => a.name + " ")}</span>`;
+                <span>  ${data.roles.map(role => role.name === 'ROLE_USER' ? 'USER' : 'ADMIN')}</span>`;
     })
 
 
