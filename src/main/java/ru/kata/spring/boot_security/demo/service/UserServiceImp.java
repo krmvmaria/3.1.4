@@ -29,6 +29,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void add(User user, Set<Role> roles) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
         userDao.add(user);
     }
